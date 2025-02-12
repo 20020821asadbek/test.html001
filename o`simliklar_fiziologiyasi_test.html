@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O'simlik hujayrasi fiziologiyasi testi</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div id="welcome">
+        <h2>Talabaning ismi va familiyasi:</h2>
+        <input type="text" id="studentName" placeholder="Ismingizni kiriting">
+        <button onclick="startTest()">Testni boshlash</button>
+    </div>
+    
+    <div id="quiz" class="hidden">
+        <h3>Assalomu alaykum va rohmatulloh, xush kelibsiz!</h3>
+        <form id="quizForm">
+            <div id="questions"></div>
+            <button type="button" onclick="checkAnswers()">Testni yakunlash</button>
+        </form>
+    </div>
+    
+    <div id="result" class="hidden"></div>
+    
+    <script>
+        const questions = [
+            { q: "Vakuola membranasi nima deb ataladi?", options: ["Tonoplast", "Prozenxima", "Parenxima", "Lipoproteid"], correct: 0 },
+            { q: "Hujayra yadrosi o'lchami qancha?", options: ["13 mkm", "10 mkm", "9 mkm", "2.3 mkm"], correct: 1 },
+            { q: "Yadrocha tarkibida oqsil necha foiz bo'ladi?", options: ["70-76%", "80-85%", "56-60%", "44-45%"], correct: 1 },
+            { q: "Xromasomalarning ikkilamchi belbog'larini qaysi olim yadrocha hosil qiluvchi markaz deb nomlagan?", options: ["Lui Paster", "Aristotel", "Malpigi", "Mak Klintok"], correct: 3 },
+            { q: "Endoplazmatik to'r diametri qancha?", options: ["45 -60 nm", "50 - 51 nm", "30 -50 nm", "60 - 100 nm"], correct: 2 },
+            { q: "Ribasomalar nimalardan tashkil topgan?", options: ["DNK va RNK", "RNK va uglevod", "DNK va lipid", "RNK va oqsil"], correct: 3 },
+            { q: "O'simlik hujayrasida mitoxondriya necha kunda yangilanadi?", options: ["20-21", "18-23", "5-10", "16-17"], correct: 2 },
+            { q: "Sitoplazmaning o'rta qavati nima deb ataladi?", options: ["Mezoplazma", "Tonoplast", "Plazmolemma", "Peoksisoma"], correct: 0 },
+            { q: "Yuksak o'simliklar bargi hujayralarida nechtagacha plastidalar bo'ladi?", options: ["20-30", "50-54", "60-67", "80-90"], correct: 0 },
+            { q: "Endoplazmatik to'rdan uzilib chiqib pufakchalarning o'zaro qo'shilishi va o'zgarishidan yuzaga keladigan organoid qaysi?", options: ["Vakuola", "Golji aparati", "Yadrocha", "Yadro"], correct: 1 }
+        ];
+        
+        function startTest() {
+            let name = document.getElementById("studentName").value;
+            if (!name) {
+                alert("Iltimos, ismingizni kiriting!");
+                return;
+            }
+            document.getElementById("welcome").classList.add("hidden");
+            document.getElementById("quiz").classList.remove("hidden");
+            
+            let questionDiv = document.getElementById("questions");
+            questionDiv.innerHTML = "";
+            
+            questions.forEach((question, index) => {
+                let html = `<p>${index + 1}. ${question.q}</p>`;
+                question.options.forEach((option, i) => {
+                    html += `<input type='radio' name='q${index}' value='${i}'> ${option}<br>`;
+                });
+                questionDiv.innerHTML += html;
+            });
+        }
+        
+        function checkAnswers() {
+            let score = 0;
+            let resultText = "";
+            
+            questions.forEach((question, index) => {
+                let selected = document.querySelector(`input[name=q${index}]:checked`);
+                if (selected) {
+                    let selectedValue = parseInt(selected.value);
+                    if (selectedValue === question.correct) {
+                        score++;
+                        resultText += `<p style='color:green;'>${index + 1}. To'g'ri</p>`;
+                    } else {
+                        resultText += `<p style='color:red;'>${index + 1}. Noto'g'ri (To'g'ri javob: ${question.options[question.correct]})</p>`;
+                    }
+                } else {
+                    resultText += `<p style='color:red;'>${index + 1}. Javob berilmagan</p>`;
+                }
+            });
+            
+            document.getElementById("quiz").classList.add("hidden");
+            let resultDiv = document.getElementById("result");
+            resultDiv.classList.remove("hidden");
+            
+            resultText += `<h2>Natija: ${score} / 10</h2>`;
+            if (score >= 7) {
+                resultText += "<h2>Great! Siz buni uddaladingiz. Keyingi ishlaringizga muvaffaqiyat tilayman.<br>Best wishes, MR.OMONOV</h2>";
+            } else {
+                resultText += "<h2>Hayot mag'lubiyatlar bilan shirin, albatta har doim keyingi imkoniyat bo'ladi.<br>Best wishes, MR.OMONOV</h2>";
+            }
+            resultDiv.innerHTML = resultText;
+        }
+    </script>
+</body>
+</html>
